@@ -1,0 +1,134 @@
+<modification>
+
+	<id>Amazon S3 Downloads for OpenCart 1.5.x</id>
+	<version>1.0.3</version>
+	<vqmver>1.2.3</vqmver>
+	<author>avalez</author>
+
+	<file name="admin/controller/setting/setting.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['tab_server'] = $this->language->get('tab_server');
+			]]></search>
+			<add><![CDATA[
+			$this->data['tab_aws'] = $this->language->get('tab_aws');
+			$this->data['entry_aws_bucket'] = $this->language->get('entry_aws_bucket');
+			$this->data['entry_aws_accessKey'] = $this->language->get('entry_aws_accessKey');
+			$this->data['entry_aws_secretKey'] = $this->language->get('entry_aws_secretKey');
+			]]></add>
+		</operation>
+		<operation>
+			<search position="before"><![CDATA[
+			$this->template = 'setting/setting.tpl';
+			]]></search>
+			<add><![CDATA[
+			if (isset($this->request->post['config_aws_bucket'])) {
+				$this->data['config_aws_bucket'] = $this->request->post['config_aws_bucket']; 
+			} else {
+				$this->data['config_aws_bucket'] = $this->config->get('config_aws_bucket');
+			}
+
+			if (isset($this->request->post['config_aws_accessKey'])) {
+				$this->data['config_aws_accessKey'] = $this->request->post['config_aws_accessKey']; 
+			} else {
+				$this->data['config_aws_accessKey'] = $this->config->get('config_aws_accessKey');
+			}
+
+			if (isset($this->request->post['config_aws_secretKey'])) {
+				$this->data['config_aws_secretKey'] = $this->request->post['config_aws_secretKey']; 
+			} else {
+				$this->data['config_aws_secretKey'] = $this->config->get('config_aws_secretKey');
+			}
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="admin/view/template/setting/setting.tpl">
+		<operation>
+			<search position="replace" regex="true"><![CDATA[~(\$tab_server; \?></a>)~]]></search>
+			<add><![CDATA[$1<a href="#tab-aws"><?php echo $tab_aws; ?></a>]]></add>
+		</operation>
+		<operation error="skip">
+			<search position="after"><![CDATA[
+              <td><textarea name="config_google_analytics" cols="40" rows="5"><?php echo $config_google_analytics; ?></textarea></td>
+			]]></search>
+			<add><![CDATA[
+            </tr>
+          </table>
+        </div>
+        <div id="tab-aws">
+          <table class="form">
+            <tr>
+            <tr>
+              <td><?php echo $entry_aws_bucket; ?></td>
+              <td><input type="text" name="config_aws_bucket" value="<?php echo $config_aws_bucket; ?>" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_aws_accessKey; ?></td>
+              <td><input type="text" name="config_aws_accessKey" value="<?php echo $config_aws_accessKey; ?>" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_aws_secretKey; ?> </td>
+              <td><input type="text" name="config_aws_secretKey" value="<?php echo $config_aws_secretKey; ?>" /></td>
+			]]></add>
+		</operation>
+	</file>
+
+  <file name="admin/language/english/setting/setting.php">
+      <operation>
+    			<search position="after"><![CDATA[entry_google_analytics]]></search>
+          <add><![CDATA[
+      $_['entry_aws_bucket']         = 'AWS Bucket:<br /><span class="help">Amazon Web Services S3 Bucket.</span>';
+      $_['entry_aws_accessKey']      = 'AWS Access Key:<br /><span class="help">Amazon Web Services S3 Access Key.</span>';
+      $_['entry_aws_secretKey']      = 'AWS Secret Key:<br /><span class="help">Amazon Web Services S3 Secret Key.</span>';
+          ]]></add>
+      </operation>
+  </file>
+
+  <file name="admin/language/english/english.php">
+      <operation>
+    			<search position="after"><![CDATA[tab_server]]></search>
+          <add><![CDATA[
+            $_['tab_aws']                 = 'AWS';
+          ]]></add>
+      </operation>
+  </file>
+
+  <file name="catalog/controller/account/download.php">
+      <operation>
+    			<search position="replace"><![CDATA[file_exists(DIR_DOWNLOAD]]></search>
+          <add><![CDATA[true || file_exists(DIR_DOWNLOAD]]></add>
+      </operation>
+      <operation>
+    			<search position="replace"><![CDATA[filesize(DIR_DOWNLOAD]]></search>
+          <add><![CDATA[0;// filesize(DIR_DOWNLOAD]]></add>
+      </operation>
+      <operation>
+    			<search position="replace" offset="10"><![CDATA[
+    				if (file_exists($file)) {
+          ]]></search>
+          <add><![CDATA[
+    				if (true || file_exists($file)) {
+            $awsBucket = $this->config->get('config_aws_bucket');
+            $awsAccessKey = $this->config->get('config_aws_accessKey');
+            $awsSecretKey = $this->config->get('config_aws_secretKey');
+            require_once(DIR_SYSTEM . 'library/s3.php');
+        		$useSSL = isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'));
+            S3::init($awsAccessKey, $awsSecretKey, $useSSL);
+            $url = S3::getAuthenticatedURL($awsBucket, $download_info['name'], 1000);
+            header('Location: ' . $url);
+          ]]>
+        	</add>
+      </operation>
+  </file>
+
+	<file name="catalog/view/theme/*/template/account/download.tpl">
+		<operation>
+			<search position="replace"><![CDATA[
+      	<div class="download-status"><b><?php echo $text_size; ?></b> <?php echo $download['size']; ?></div>
+			]]></search>
+			<add><![CDATA[]]></add>
+		</operation>
+	</file>
+  
+</modification>
