@@ -1,0 +1,50 @@
+Amazon S3 Downloads extension provides support for Amazon Simple Storage
+Service (Amazon S3). It allows you to serve your downloadable files from
+Amazon storage. Download link expires in 15 minutes.
+
+It may be needed for those who are selling downloadable content, like eBooks
+or music  and want to provide reliable and fast download for their store.
+It is especially useful when selling huge files, like videos. Storing content
+in your Amazon S3 bucket rather than on your application server reduces load on
+the server and overall costs.
+
+This plugin is different than
+[Amazon S3 Basic Integration|http://www.opencart.com/index.php?route=extension/extension/info&extension_id=4429].
+It has simplified installation and does not have Pro version (where you can
+upload your files to S3 from Opencart).
+
+Lateser Version 1.0.3, verified with the following versions of OpenCart, however it should work with any version >= 1.4:
+* 1.5.1.1, 1.5.2.1
+
+Copyright 2012 Andriy Zhdanov (azhdanov@gmail.com)
+
+============
+Installation
+============
+
+1. Install [VQMod](http://code.google.com/p/vqmod/) before installing this plugin.
+2 .Upload archive content into your cart installation directory.
+3. Specify Amazon S3 credentials at System => Settings, there for your store see AWS tab.
+4. Enter your Amazon S3 Bucket, Access Key and Security Key and save.
+
+That's it!
+
+=====
+Usage
+=====
+
+Add your downloads the usual way WITHOUT uploading actual file, just set name and save. Then go to Amazon Console and upload file with the name to necessary bucket.
+
+If you have existing downloads you need to upload all files to Amazon S3, otherwise they will not be possible download.
+
+=========
+Known Bugs
+=========
+
+- N/A
+
+=====
+History
+=====
+v1.0.3 - 2/5/2012 - Download limit was not counted
+v1.0.0 - 18/04/2012 - First release
