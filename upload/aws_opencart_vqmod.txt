@@ -13,12 +13,12 @@ This plugin is different than
 It has simplified installation and does not have Pro version (where you can
 upload your files to S3 from Opencart).
 
-Latest Version 1.0.3, verified with OpenCart versions 1.5.1.1 and 1.5.2.1 (Should work on OpenCart version >= 1.4)
+Latest Version 1.0.4, verified with OpenCart versions 1.5.4.1, 1.5.1.1 and 1.5.2.1 (Should work on OpenCart version >= 1.4)
 
 To Install:
 
-1. Install [VQMod](http://code.google.com/p/vqmod/) before installing this plugin.
-2 .Upload archive content into your cart installation directory.
+1. Install [VQMod](http://code.google.com/p/vqmod/) before installing this plugin, see http://code.google.com/p/vqmod/wiki/Install_OpenCart
+2. Upload archive content into your cart installation directory.
 3. Specify Amazon S3 credentials at System => Settings, there for your store see AWS tab.
 4. Enter your Amazon S3 Bucket, Access Key and Security Key and save.
 
@@ -26,7 +26,7 @@ That's it!
 
 Usage:
 
-Add your downloads the usual way WITHOUT uploading actual file. When you create downloadable do not upload file, just set name and save. Then go to Amazon Console and upload file with the name to necessary bucket.
+Add your downloads the usual way WITHOUT uploading actual file. When you create downloadable do not upload file, just set file name using relative path to file in S3 bucket, and save. Then go to Amazon Console and upload file with the name to necessary bucket.
 
 If you have existing downloads you need to upload all files to Amazon S3, otherwise they will not be possible download.
 
@@ -34,7 +34,8 @@ Download link expires in 15 minutes.
 
 History:
 
-v1.0.3 - 2/5/2012 - Download limit was not counted
-v1.0.0 - 18/04/2012 - First release
+v1.0.4 - 8.10.2012 - Download limit was not counted
+v1.0.3 - 2.5.2012 - Download limit was not counted
+v1.0.0 - 18.04.2012 - First release
 
 Copyright 2012 Andriy Zhdanov (azhdanov@gmail.com)
