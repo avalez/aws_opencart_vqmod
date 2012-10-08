@@ -13,7 +13,7 @@ This plugin is different than
 It has simplified installation and does not have Pro version (where you can
 upload your files to S3 from Opencart).
 
-Latest Version 1.0.4, verified with OpenCart versions 1.5.4.1, 1.5.1.1 and 1.5.2.1 (Should work on OpenCart version >= 1.4)
+Latest Version 1.0.5, verified with OpenCart versions 1.5.4.1, 1.5.1.1 and 1.5.2.1 (Should work on OpenCart version >= 1.4)
 
 To Install:
 
@@ -34,6 +34,7 @@ Download link expires in 15 minutes.
 
 History:
 
+v1.0.5 - 8.10.2012 - lowercase bucket name.
 v1.0.4 - 8.10.2012 - Use filename to download from s3, so do not validate it when creating download.
 v1.0.3 - 2.5.2012 - Download limit was not counted
 v1.0.0 - 18.04.2012 - First release

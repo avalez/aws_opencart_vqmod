@@ -122,7 +122,7 @@
             require_once(DIR_SYSTEM . 'library/s3.php');
         		$useSSL = isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'));
             S3::init($awsAccessKey, $awsSecretKey, $useSSL);
-            $url = S3::getAuthenticatedURL($awsBucket, $download_info['filename'], 1000);
+            $url = S3::getAuthenticatedURL(strtolower($awsBucket), $download_info['filename'], 1000);
             header('Location: ' . $url);
           ]]>
         	</add>
