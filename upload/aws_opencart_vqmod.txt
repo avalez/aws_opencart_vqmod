@@ -34,7 +34,7 @@ Download link expires in 15 minutes.
 
 History:
 
-v1.0.5 - 8.10.2012 - lowercase bucket name.
+v1.0.5 - 9.10.2012 - support mixed case bucket names.
 v1.0.4 - 8.10.2012 - Use filename to download from s3, so do not validate it when creating download.
 v1.0.3 - 2.5.2012 - Download limit was not counted
 v1.0.0 - 18.04.2012 - First release

@@ -13,6 +13,10 @@
 			<add><![CDATA[
 			$this->data['tab_aws'] = $this->language->get('tab_aws');
 			$this->data['entry_aws_bucket'] = $this->language->get('entry_aws_bucket');
+			$this->data['entry_aws_pathStyle'] = $this->language->get('entry_aws_pathStyle');
+			$this->data['text_aws_pathStyleYes'] = $this->language->get('text_aws_pathStyleYes');
+			$this->data['text_aws_pathStyleNo'] = $this->language->get('text_aws_pathStyleNo');
+			$this->data['entry_aws_bucketRegion'] = $this->language->get('entry_aws_bucketRegion');
 			$this->data['entry_aws_accessKey'] = $this->language->get('entry_aws_accessKey');
 			$this->data['entry_aws_secretKey'] = $this->language->get('entry_aws_secretKey');
 			]]></add>
@@ -26,6 +30,18 @@
 				$this->data['config_aws_bucket'] = $this->request->post['config_aws_bucket']; 
 			} else {
 				$this->data['config_aws_bucket'] = $this->config->get('config_aws_bucket');
+			}
+
+			if (isset($this->request->post['config_aws_pathStyle'])) {
+				$this->data['config_aws_pathStyle'] = $this->request->post['config_aws_pathStyle']; 
+			} else {
+				$this->data['config_aws_pathStyle'] = $this->config->get('config_aws_pathStyle');
+			}
+
+			if (isset($this->request->post['config_aws_bucketRegion'])) {
+				$this->data['config_aws_bucketRegion'] = $this->request->post['config_aws_bucketRegion']; 
+			} else {
+				$this->data['config_aws_bucketRegion'] = $this->config->get('config_aws_bucketRegion');
 			}
 
 			if (isset($this->request->post['config_aws_accessKey'])) {
@@ -58,10 +74,21 @@
         </div>
         <div id="tab-aws">
           <table class="form">
-            <tr>
+            </tr>
             <tr>
               <td><?php echo $entry_aws_bucket; ?></td>
               <td><input type="text" name="config_aws_bucket" value="<?php echo $config_aws_bucket; ?>" /></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_aws_pathStyle; ?></td>
+              <td><input type="radio" name="config_aws_pathStyle" value="1"
+                  <?php if ($config_aws_pathStyle) echo 'checked="checked"' ?>><?php echo $text_aws_pathStyleYes; ?></input>
+                <input type="radio" name="config_aws_pathStyle" value="0"
+                  <?php if (!$config_aws_pathStyle) echo 'checked="checked"' ?>><?php echo $text_aws_pathStyleNo; ?></input></td>
+            </tr>
+            <tr>
+              <td><?php echo $entry_aws_bucketRegion; ?></td>
+              <td><input type="text" name="config_aws_bucketRegion" value="<?php echo $config_aws_bucketRegion; ?>" /></td>
             </tr>
             <tr>
               <td><?php echo $entry_aws_accessKey; ?></td>
@@ -78,7 +105,14 @@
       <operation>
     			<search position="after"><![CDATA[entry_google_analytics]]></search>
           <add><![CDATA[
-      $_['entry_aws_bucket']         = 'AWS Bucket:<br /><span class="help">Amazon Web Services S3 Bucket.</span>';
+      $_['entry_aws_bucket']         = 'AWS Bucket:<br /><span class="help">Amazon Web Services S3 Bucket.
+        Must be lower case if using Virtual-hosted Bucket URI style.</span>';
+      $_['entry_aws_pathStyle']      = 'Bucket URI style:<br /><span class="help">Use Path URI style for mixed case bucket names.
+        It requires region-specific endpoints. Default Virtual-hosted style does not support mixed case bucket names.</span>';
+      $_['text_aws_pathStyleYes']    = 'Path';
+      $_['text_aws_pathStyleNo']     = 'Virtual-hosted';
+      $_['entry_aws_bucketRegion']   = 'S3 Bucket Region:<br /><span class="help">
+        This is needed for case-sensitive bucket names, when using regional buckets, e.g. eu-west-1. Leave empty for US Standard.</span>';
       $_['entry_aws_accessKey']      = 'AWS Access Key:<br /><span class="help">Amazon Web Services S3 Access Key.</span>';
       $_['entry_aws_secretKey']      = 'AWS Secret Key:<br /><span class="help">Amazon Web Services S3 Secret Key.</span>';
           ]]></add>
@@ -117,12 +151,15 @@
           <add><![CDATA[
     				if (true || file_exists($file)) {
             $awsBucket = $this->config->get('config_aws_bucket');
+            $awsHostBucket = !$this->config->get('config_aws_pathStyle');
+            $awsBucketRegion = $this->config->get('config_aws_bucketRegion');
+            $endpoint = $awsBucketRegion ? 's3-' . $awsBucketRegion . '.amazonaws.com' : 's3.amazonaws.com';
             $awsAccessKey = $this->config->get('config_aws_accessKey');
             $awsSecretKey = $this->config->get('config_aws_secretKey');
             require_once(DIR_SYSTEM . 'library/s3.php');
         		$useSSL = isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'));
-            S3::init($awsAccessKey, $awsSecretKey, $useSSL);
-            $url = S3::getAuthenticatedURL(strtolower($awsBucket), $download_info['filename'], 1000);
+            S3::init($awsAccessKey, $awsSecretKey, $useSSL, $endpoint);
+            $url = S3::getAuthenticatedURL($awsBucket, $download_info['filename'], 1000, $awsHostBucket);
             header('Location: ' . $url);
           ]]>
         	</add>

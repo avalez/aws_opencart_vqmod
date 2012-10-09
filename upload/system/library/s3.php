@@ -61,7 +61,7 @@ pack('H*', sha1((str_pad(self::$__secretKey, 64, chr(0x00)) ^
 * @param string $bucket Bucket name
 * @param string $uri Object URI
 * @param integer $lifetime Lifetime in seconds
-* @param boolean $hostBucket Use the bucket name as the hostname
+* @param boolean $hostBucket Use virtual-hosted bucket uri, otherwise path uri.
 * @param boolean $https Use HTTPS ($hostBucket should be false for SSL verification)
 * @return string
 */
@@ -69,8 +69,9 @@ public static function getAuthenticatedURL($bucket, $uri, $lifetime, $hostBucket
 {
 $expires = time() + $lifetime;
 $uri = str_replace('%2F', '/', rawurlencode($uri)); // URI should be encoded (thanks Sean O'Dea)
-return sprintf((self::$__useSSL ? 'https' : 'http').'://%s/%s?AWSAccessKeyId=%s&Expires=%u&Signature=%s',
-$hostBucket ? $bucket : $bucket . '.' . self::$__endpoint, $uri, self::$__accessKey, $expires,
+return sprintf((self::$__useSSL ? 'https' : 'http').'://%s/%s%s?AWSAccessKeyId=%s&Expires=%u&Signature=%s',
+$hostBucket ? $bucket . '.' . self::$__endpoint : self::$__endpoint,
+!$hostBucket ? $bucket . '/' : '', $uri, self::$__accessKey, $expires,
 urlencode(self::__getHash("GET\n\n\n{$expires}\n/{$bucket}/{$uri}")));
 }
 }
