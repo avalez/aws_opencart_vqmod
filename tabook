@@ -1,0 +1,208 @@
+<modification>
+	<id>Amazon S3 Downloads for OpenCart 2.0.x</id>
+        <code>Amazon-S3-Downloads</code>
+        <name>Amazon S3 Downloads for OpenCart 2.0.x</name>
+        <code>Acute-Category-Manager-Plus</code>
+	<author><![CDATA[tabook]]></author>
+	<version>2.0.0</version>
+	<file path="admin/controller/setting/setting.php">
+		<operation>
+			<search><![CDATA[
+			$data['tab_server'] = $this->language->get('tab_server');
+			]]></search>
+			<add position="after"><![CDATA[
+			$data['tab_aws'] = $this->language->get('tab_aws');
+			$data['entry_aws_bucket'] = $this->language->get('entry_aws_bucket');
+			$data['entry_aws_bucket_hint'] = $this->language->get('entry_aws_bucket_hint');
+			$data['entry_aws_pathStyle'] = $this->language->get('entry_aws_pathStyle');
+			$data['entry_aws_pathStyle_hint'] = $this->language->get('entry_aws_pathStyle_hint');
+			$data['text_aws_pathStyleYes'] = $this->language->get('text_aws_pathStyleYes');
+			$data['text_aws_pathStyleNo'] = $this->language->get('text_aws_pathStyleNo');
+			$data['entry_aws_bucketRegion'] = $this->language->get('entry_aws_bucketRegion');
+			$data['entry_aws_bucketRegion_hint'] = $this->language->get('entry_aws_bucketRegion_hint');
+			$data['entry_aws_accessKey'] = $this->language->get('entry_aws_accessKey');
+			$data['entry_aws_accessKey_hint'] = $this->language->get('entry_aws_accessKey_hint');
+			$data['entry_aws_secretKey'] = $this->language->get('entry_aws_secretKey');
+			$data['entry_aws_secretKey_hint'] = $this->language->get('entry_aws_secretKey_hint');
+			]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+			$this->response->setOutput($this->load->view('setting/setting.tpl', $data));
+			]]></search>
+			<add position="before"><![CDATA[
+			if (isset($this->request->post['config_aws_bucket'])) {
+				$data['config_aws_bucket'] = $this->request->post['config_aws_bucket']; 
+			} else {
+				$data['config_aws_bucket'] = $this->config->get('config_aws_bucket');
+			}
+
+			if (isset($this->request->post['config_aws_pathStyle'])) {
+				$data['config_aws_pathStyle'] = $this->request->post['config_aws_pathStyle']; 
+			} else {
+				$data['config_aws_pathStyle'] = $this->config->get('config_aws_pathStyle');
+			}
+
+			if (isset($this->request->post['config_aws_bucketRegion'])) {
+				$data['config_aws_bucketRegion'] = $this->request->post['config_aws_bucketRegion']; 
+			} else {
+				$data['config_aws_bucketRegion'] = $this->config->get('config_aws_bucketRegion');
+			}
+
+			if (isset($this->request->post['config_aws_accessKey'])) {
+				$data['config_aws_accessKey'] = $this->request->post['config_aws_accessKey']; 
+			} else {
+				$data['config_aws_accessKey'] = $this->config->get('config_aws_accessKey');
+			}
+
+			if (isset($this->request->post['config_aws_secretKey'])) {
+				$data['config_aws_secretKey'] = $this->request->post['config_aws_secretKey']; 
+			} else {
+				$data['config_aws_secretKey'] = $this->config->get('config_aws_secretKey');
+			}
+			]]></add>
+		</operation>
+	</file>
+	<file path="admin/view/template/setting/setting.tpl">
+		<operation>
+			<search><![CDATA[<li><a href="#tab-server" data-toggle="tab"><?php echo $tab_server; ?></a></li>]]></search>
+			<add position="before"><![CDATA[<li><a href="#tab-aws" data-toggle="tab"><?php echo $tab_aws; ?></a></li>]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[<div class="tab-pane" id="tab-server">]]></search>
+			<add position="before"><![CDATA[
+
+            <div class="tab-pane" id="tab-aws">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="config-aws-bucket"><span data-toggle="tooltip" title="<?php echo $entry_aws_bucket_hint; ?>"><?php echo $entry_aws_bucket; ?></span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_aws_bucket" value="<?php echo $config_aws_bucket; ?>" id="config-aws-bucket" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label"><span data-toggle="tooltip" title="<?php echo $entry_aws_pathStyle_hint; ?>"><?php echo $entry_aws_pathStyle; ?></span></label>
+                <div class="col-sm-10">
+                  <label class="radio-inline">
+                    <?php if ($config_aws_pathStyle) { ?>
+                    <input type="radio" name="config_aws_pathStyle" value="1" checked="checked" />
+                    <?php echo $text_aws_pathStyleYes; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="config_aws_pathStyle" value="1" />
+                    <?php echo $text_aws_pathStyleYes; ?>
+                    <?php } ?>
+                  </label>
+                  <label class="radio-inline">
+                    <?php if (!$config_aws_pathStyle) { ?>
+                    <input type="radio" name="config_aws_pathStyle" value="0" checked="checked" />
+                    <?php echo $text_aws_pathStyleNo; ?>
+                    <?php } else { ?>
+                    <input type="radio" name="config_aws_pathStyle" value="0" />
+                    <?php echo $text_aws_pathStyleNo; ?>
+                    <?php } ?>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="config-aws-bucketRegion"><span data-toggle="tooltip" title="<?php echo $entry_aws_bucketRegion_hint; ?>"><?php echo $entry_aws_bucketRegion; ?></span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_aws_bucketRegion" value="<?php echo $config_aws_bucketRegion; ?>" id="config-aws-bucketRegion" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="config-aws-accessKey"><span data-toggle="tooltip" title="<?php echo $entry_aws_accessKey_hint; ?>"><?php echo $entry_aws_accessKey; ?></span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_aws_accessKey" value="<?php echo $config_aws_accessKey; ?>" id="config-aws-accessKey" class="form-control" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="config-aws-secretKey"><span data-toggle="tooltip" title="<?php echo $entry_aws_secretKey_hint; ?>"><?php echo $entry_aws_secretKey; ?></span></label>
+                <div class="col-sm-10">
+                  <input type="text" name="config_aws_secretKey" value="<?php echo $config_aws_secretKey; ?>" id="config-aws-secretKey" class="form-control" />
+                </div>
+              </div>
+            </div>
+			]]></add>
+		</operation>
+	</file>
+  <file path="admin/language/english/setting/setting.php">
+      <operation>
+    			<search><![CDATA[// Help]]></search>
+          <add position="before"><![CDATA[
+      $_['entry_aws_bucket']         = 'AWS Bucket:';
+      $_['entry_aws_bucket_hint']    = 'Amazon Web Services S3 Bucket. Must be lower case if using Virtual-hosted Bucket URI style.';
+      $_['entry_aws_pathStyle']      = 'Bucket URI style:';
+      $_['entry_aws_pathStyle_hint'] = 'Use Path URI style for mixed case bucket names. It requires region-specific endpoints. Default Virtual-hosted style does not support mixed case bucket names.';
+      $_['text_aws_pathStyleYes']    = 'Path';
+      $_['text_aws_pathStyleNo']     = 'Virtual-hosted';
+      $_['entry_aws_bucketRegion']   = 'S3 Bucket Region:';
+      $_['entry_aws_bucketRegion_hint'] = 'This is needed for case-sensitive bucket names, when using regional buckets, e.g. eu-west-1. Leave empty for US Standard.';
+      $_['entry_aws_accessKey']      = 'AWS Access Key:';
+      $_['entry_aws_accessKey_hint'] = 'Amazon Web Services S3 Access Key.';
+      $_['entry_aws_secretKey']      = 'AWS Secret Key:';
+      $_['entry_aws_secretKey_hint'] = 'Amazon Web Services S3 Secret Key.';
+          ]]></add>
+      </operation>
+  </file>
+
+  <file path="admin/language/english/default.php">
+      <operation>
+    			<search><![CDATA[$_['tab_action']                    = 'Action';]]></search>
+          <add position="after"><![CDATA[
+            $_['tab_aws']                 = 'AWS';
+          ]]></add>
+      </operation>
+  </file>
+
+  <file path="admin/controller/catalog/download.php">
+      <operation>
+    			<search><![CDATA[!is_file(DIR_DOWNLOAD]]></search>
+          <add position="replace"><![CDATA[false && !is_file(DIR_DOWNLOAD]]></add>
+      </operation>
+  </file>
+
+  <file path="catalog/controller/account/download.php">
+      <operation>
+    			<search><![CDATA[file_exists(DIR_DOWNLOAD]]></search>
+          <add position="replace"><![CDATA[true || file_exists(DIR_DOWNLOAD]]></add>
+      </operation>
+      <operation>
+    			<search><![CDATA[filesize(DIR_DOWNLOAD]]></search>
+          <add position="replace"><![CDATA[0;// filesize(DIR_DOWNLOAD]]></add>
+      </operation>
+      <operation>
+    			<search><![CDATA[
+    				if (file_exists($file)) {
+          ]]></search>
+          <add position="replace" offset="10"><![CDATA[
+    				if (true || file_exists($file)) {
+            $awsBucket = $this->config->get('config_aws_bucket');
+            $awsHostBucket = !$this->config->get('config_aws_pathStyle');
+            $awsBucketRegion = $this->config->get('config_aws_bucketRegion');
+            $endpoint = $awsBucketRegion ? 's3-' . $awsBucketRegion . '.amazonaws.com' : 's3.amazonaws.com';
+            $awsAccessKey = $this->config->get('config_aws_accessKey');
+            $awsSecretKey = $this->config->get('config_aws_secretKey');
+            require_once(DIR_SYSTEM . 'library/s3.php');
+        		$useSSL = isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1'));
+            S3::init($awsAccessKey, $awsSecretKey, $useSSL, $endpoint);
+            $url = S3::getAuthenticatedURL($awsBucket, $download_info['filename'], 1000, $awsHostBucket);
+            header('Location: ' . $url);
+          ]]>
+        	</add>
+      </operation>
+  </file>
+
+	<file path="catalog/view/theme/*/template/account/download.tpl">
+		<operation>
+			<search><![CDATA[
+      	<td class="text-left"><?php echo $column_size; ?></td>
+			]]></search>
+			<add position="replace"> <![CDATA[]]></add>
+		</operation>
+		<operation>
+			<search><![CDATA[
+      	<td class="text-left"><?php echo $download['size']; ?></td>
+			]]></search>
+			<add position="replace"> <![CDATA[]]></add>
+		</operation>
+	</file>
+</modification>
