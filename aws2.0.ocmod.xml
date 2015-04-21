@@ -2,7 +2,6 @@
 	<id>Amazon S3 Downloads for OpenCart 2.0.x</id>
         <code>Amazon-S3-Downloads</code>
         <name>Amazon S3 Downloads for OpenCart 2.0.x</name>
-        <code>Acute-Category-Manager-Plus</code>
 	<author><![CDATA[tabook]]></author>
 	<version>2.0.0</version>
 	<file path="admin/controller/setting/setting.php">
